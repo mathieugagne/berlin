@@ -1,14 +1,14 @@
-test:
-  adapter: sqlite3
-  database: db/test.sqlite3
-  pool: 5
-  timeout: 5000
-
 development:
-  adapter: sqlite3
-  database: db/development.sqlite3
-  pool: 5
-  timeout: 5000
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV["DATABASE_POOL"] || 25 %>
+  url: "postgres://postgres@postgres:5432/berlin_development"
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV["DATABASE_POOL"] || 25 %>
+  url: "postgres://postgres@postgres:5432/berlin_test"
 
 production:
   adapter: mysql2

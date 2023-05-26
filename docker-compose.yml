@@ -1,0 +1,69 @@
+version: "3.8"
+
+x-app: &app
+  build:
+    context: ./
+    dockerfile: Dockerfile
+    args:
+      # BUNDLER_VERSION: "2.4.13"
+      BUNDLER_VERSION: "1.17.3"
+      # RUBY_VERSION: "2.7.8"
+      RUBY_VERSION: "2.5.9"
+      DOCKER_IMAGE: "ruby:2.6.10-bullseye"
+      USER_UID: "${UID:-1000}"
+      USER_GID: "${GID:-100}"
+  environment: &env
+    APP_HOST: rails
+  image: berlin-ai:latest
+  user: dev
+  tmpfs:
+    - /tmp
+  networks:
+    - default
+  extra_hosts:
+    - host.docker.internal:host-gateway
+
+x-backend: &backend
+  <<: *app
+  stdin_open: true
+  tty: true
+  volumes:
+    - .:/app:cached
+    - rails_cache:/app/tmp/cache
+    - bundle:/usr/local/bundle
+  environment:
+    <<: *env
+    HISTFILE: /app/log/.bash_history
+    PSQL_HISTFILE: /app/log/.psql_history
+  depends_on:
+    - postgres
+
+services:
+  runner:
+    <<: *backend
+    command: /bin/bash
+    # Inline command in this service doesn't catch SIGTERM to stop so we have to send directly a SIGKILL
+    stop_signal: SIGKILL
+    ports:
+      - "4568:4567" # Debug port
+  rails:
+    <<: *backend
+    entrypoint: ./entrypoint.sh
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+      - "4567:4567" # Debug port
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+volumes:
+  bundle:
+  rails_cache:
+  postgres:

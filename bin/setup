@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+
+# path to your application root.
+APP_ROOT = File.expand_path("..", __dir__)
+
+def system!(*args)
+  puts args
+  system(*args) || abort("\n== Command #{args} failed ==")
+end
+
+FileUtils.chdir APP_ROOT do
+  # Setup docker
+  puts "\n== Stopping old services =="
+  system! "docker compose stop"
+
+  puts "\n== Rebuild runner =="
+  system! "docker compose build runner"
+
+  puts "\n== Starting services =="
+  system! "docker compose up --detach --remove-orphans postgres runner"
+
+  puts "\n== Fix container permissions =="
+  system! "docker compose exec --user root runner chown -R $(id -u):$(id -g) /app/tmp /usr/local/bundle/"
+
+  # puts "\n== Install bundle dependencies =="
+  system! "docker compose exec runner bundle config force_ruby_platform true"
+  system! "docker compose exec runner bundle install"
+
+  # puts "\n== Preparing development database =="
+  # system! "docker compose exec runner bundle exec rake db:create db:migrate"
+
+  # puts "\n== Removing old logs and tempfiles =="
+  # system! "docker compose exec runner bundle exec rake log:clear tmp:clear"
+end

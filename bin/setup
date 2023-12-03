@@ -8,7 +8,7 @@ APP_ROOT = File.expand_path("..", __dir__)
 
 def system!(*args)
   puts args
-  system(*args) || abort("\n== Command #{args} failed ==")
+  system({ "UID" => Process.uid.to_s, "GID" => Process.gid.to_s }, *args) || abort("\n== Command #{args} failed ==")
 end
 
 FileUtils.chdir APP_ROOT do
@@ -23,7 +23,7 @@ FileUtils.chdir APP_ROOT do
   system! "docker compose up --detach --remove-orphans postgres runner"
 
   puts "\n== Fix container permissions =="
-  system! "docker compose exec --user root runner chown -R $(id -u):$(id -g) /app/tmp /usr/local/bundle/"
+  system! "docker compose exec --user root runner chown -R $(id -u):$(id -g) /app/tmp /usr/local/bundle/ || :"
 
   # puts "\n== Install bundle dependencies =="
   system! "docker compose exec runner bundle config force_ruby_platform true"

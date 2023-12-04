@@ -2,8 +2,6 @@
   = t('common.no_result')
 
 - else
-  - collection.sort_by!(&:won_games).reverse!
-
   %table.large
     %thead
       %tr
@@ -15,7 +13,7 @@
         %th.icon
 
     %tbody
-      - collection.each do |resource|
+      - collection.sort_by(&:won_games).reverse.each do |resource|
         %tr{:class => resource.user == current_user ? 'important' : nil}
           %td.icon= image_tag( resource.activity_icon )
           %td= link_to resource.name, resource

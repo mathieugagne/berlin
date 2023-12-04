@@ -5,7 +5,7 @@ class GameRunnerJob < Struct.new(:game_id)
   end
 
   def max_attempts
-    return 10
+    return 20
   end
 
   def error(job, exception)

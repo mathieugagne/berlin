@@ -35,4 +35,13 @@ class ArtificialIntelligence < ActiveRecord::Base
   def activity_icon
     self.is_active ? "light-green.png" : "light-red.png"
   end
+
+  class << self
+    def best_for_map(map)
+      self.where(artificial_intelligence_games: { game: { map: map }})
+        .select("SUM(artificial_intelligence_games.score) / COUNT(artificial_intelligence_games.id) AS ratio")
+        .order("ratio DESC")
+        .first
+    end
+  end
 end

@@ -15,8 +15,6 @@
       %tr
         %td.label= Map.human_attribute_name :best_artificial_intelligence
         %td
-          - if artificial_intelligence = @map.best_artificial_intelligence
-            = link_to artificial_intelligence.name, artificial_intelligence
 
 .content
   %h2= Map.model_name.human

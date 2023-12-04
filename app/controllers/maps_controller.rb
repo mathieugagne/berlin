@@ -10,7 +10,7 @@ class MapsController < ApplicationController
   include Pageable
 
   def show
-    @map = Map.includes(:games => :artificial_intelligence_games).find(params[:id])
+    @map = Map.find(params[:id])
 
     @games = @map.games.officials.recent.includes(:winners, :map)
 

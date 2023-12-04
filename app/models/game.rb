@@ -65,6 +65,7 @@ class Game < ActiveRecord::Base
     assert_ai_count(map, ais.count)
 
     game = user.games.create(params) do |g|
+      g.status = :pending
       g.map = map
       g.round = Round.where(:id => params[:round_id]).first
       g.time_start = DateTime.now

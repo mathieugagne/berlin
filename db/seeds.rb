@@ -10,6 +10,8 @@ DIR = File.expand_path( File.dirname( __FILE__ ) )
 
 Map.create(:name => "DefaultMap1", :version => 1, :json => File.open( DIR + '/../public/maps/1.map' ).readlines.join)
 Map.create(:name => "DefaultMap2", :version => 1, :json => File.open( DIR + '/../public/maps/2.map' ).readlines.join)
+Map.create(:name => "DefaultMap3", :version => 1, :json => File.open( DIR + '/../public/maps/3.map' ).readlines.join)
+Map.create(:name => "DefaultMap4", :version => 1, :json => File.open( DIR + '/../public/maps/4.map' ).readlines.join)
 
 user = User.create(:username => "admin", :locale => "fr", :email => "admin@berlin.net", :password => "12345678", :password_confirmation => "12345678")
 user.is_admin = true

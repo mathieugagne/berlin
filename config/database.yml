@@ -1,18 +1,18 @@
-development:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV["DATABASE_POOL"] || 25 %>
-  url: "postgres://postgres@postgres:5432/berlin_development"
-
 test:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV["DATABASE_POOL"] || 25 %>
-  url: "postgres://postgres@postgres:5432/berlin_test"
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000
+
+development:
+  adapter: sqlite3
+  database: db/development.sqlite3
+  pool: 5
+  timeout: 5000
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV["DATABASE_POOL"] || 25 %>
-  url: <%= ENV["DATABASE_URL"] %>
-
+  adapter: mysql2
+  database: berlin
+  username: berlin
+  password: Ohth8omah6aish4kei6oaPhaip9ahb3A
+  pool: 5

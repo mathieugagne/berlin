@@ -30,7 +30,7 @@ FileUtils.chdir APP_ROOT do
   system! "docker compose exec runner bundle install"
 
   # puts "\n== Preparing development database =="
-  # system! "docker compose exec runner bundle exec rake db:create db:migrate"
+  system! "docker compose exec runner bundle exec rake db:create db:migrate"
 
   # puts "\n== Removing old logs and tempfiles =="
   # system! "docker compose exec runner bundle exec rake log:clear tmp:clear"
